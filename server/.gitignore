@@ -1,0 +1,9 @@
+# Local server dependencies
+node_modules/
+
+# Local env secret configs
+.env
+.env*.local
+
+# Debug logs
+*.log
