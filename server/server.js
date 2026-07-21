@@ -39,10 +39,29 @@ const shipmentRoutes = require('./routes/shipmentRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+app.set('trust proxy', 1);
 
 // ─── 1. CORS — MUST BE FIRST ──────────────────────────────────────────────────
+const allowedOrigins = (process.env.CLIENT_URL || process.env.FRONTEND_URL || 'http://localhost:5173')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 const corsOptions = {
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    const isAllowedOrigin = allowedOrigins.includes(origin);
+    const isLocalhostDev = process.env.NODE_ENV !== 'production' && origin.startsWith('http://localhost');
+
+    if (isAllowedOrigin || isLocalhostDev) {
+      return callback(null, true);
+    }
+
+    return callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,       // Required for httpOnly cookies (refresh token)
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],

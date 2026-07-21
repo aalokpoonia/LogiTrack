@@ -64,10 +64,12 @@ const verifyRefreshToken = (token) => {
  * sameSite: strict → Prevents CSRF attacks
  */
 const setRefreshTokenCookie = (res, refreshToken) => {
+    const isProduction = process.env.NODE_ENV === 'production';
+
     res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
         maxAge: TOKEN_CONFIG.COOKIE_MAX_AGE,
     });
 };
@@ -76,8 +78,12 @@ const setRefreshTokenCookie = (res, refreshToken) => {
  * Clear the refresh token cookie on logout.
  */
 const clearRefreshTokenCookie = (res) => {
+    const isProduction = process.env.NODE_ENV === 'production';
+
     res.cookie('refreshToken', '', {
         httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
         expires: new Date(0),
     });
 };

@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: logitrack-server
+    env: node
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: CLIENT_URL
+        value: https://your-frontend-domain.netlify.app
+      - key: FRONTEND_URL
+        value: https://your-frontend-domain.netlify.app

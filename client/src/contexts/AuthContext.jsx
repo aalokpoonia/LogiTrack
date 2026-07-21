@@ -24,7 +24,7 @@ import { createContext, useReducer, useEffect, useCallback, useRef } from 'react
 import api, { setToken, clearToken } from '../services/api';
 import axios from 'axios';
 
-const BASE_URL = '/api';
+const BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 // ─── INITIAL STATE ────────────────────────────────────────────────────────────
 const initialState = {

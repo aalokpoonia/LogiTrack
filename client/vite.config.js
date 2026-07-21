@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
@@ -12,22 +12,23 @@ import tailwindcss from '@tailwindcss/vite'
  * - CORS is completely bypassed in development — no more CORS errors
  * - No need to configure CORS for localhost at all
  *
- * In production, Nginx or Netlify handles this routing — proxy is dev-only.
- *
- * INTERVIEW QUESTION: "How do you handle CORS in a MERN dev environment?"
- * Answer: Vite proxy — avoids needing CORS config in development entirely.
- * In production, you configure CORS properly for your actual domain.
+ * In production, Netlify handles hosting while the backend API uses the configured
+ * VITE_API_URL environment variable instead of the dev proxy.
  */
-export default defineConfig({
-  plugins: [react(), tailwindcss()],
-  server: {
-    port: 5173,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5000',
-        changeOrigin: true,
-        secure: false,
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '')
+
+  return {
+    plugins: [react(), tailwindcss()],
+    server: {
+      port: 5173,
+      proxy: {
+        '/api': {
+          target: env.VITE_DEV_API_URL || 'http://localhost:5000',
+          changeOrigin: true,
+          secure: false,
+        },
       },
     },
-  },
+  }
 })
