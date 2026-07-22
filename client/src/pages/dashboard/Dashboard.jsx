@@ -128,7 +128,7 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="space-y-6 pb-8">
+        <div className="space-y-8 pb-8">
             {/* Welcome Banner */}
             <motion.div
                 initial={{ opacity: 0, y: 8 }}
@@ -166,14 +166,26 @@ const Dashboard = () => {
                 </div>
             </motion.div>
 
-            {/* Delayed Shipments Critical Alert */}
-            <DelayedShipmentsAlert data={delayedQuery.data?.data || []} />
+            {/* Top Operational Row: Quick Actions, Live Activity & Delayed Alert */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2">
+                    <QuickActions />
+                </div>
+                <div className="space-y-6">
+                    {/* Delayed Shipments Alert (Compact, collapsible, and placed in side column) */}
+                    <DelayedShipmentsAlert data={delayedQuery.data?.data || []} />
+                    <ActivityFeed data={activityQuery.data || []} />
+                </div>
+            </div>
 
-            {/* Metrics cards */}
-            <KpiCards kpis={kpisQuery.data} delayedCount={delayedQuery.data?.count || 0} />
+            {/* Metrics cards (Financial and operational KPIs) */}
+            <div className="space-y-4">
+                <h2 className="text-xs font-bold text-slate-450 uppercase tracking-wider px-1">Key Performance Statistics</h2>
+                <KpiCards kpis={kpisQuery.data} delayedCount={delayedQuery.data?.count || 0} />
+            </div>
 
-            {/* Main Graphs section */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Main Charts section (Revenue & Profit Trend and Status breakdown) */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2">
                     <RevenueChart data={revenueQuery.data || []} />
                 </div>
@@ -182,17 +194,15 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            {/* Operational Tables and Side Widgets */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 space-y-6">
+            {/* Detailed tables & stats section */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2 space-y-8">
                     <RecentShipmentsTable data={recentQuery.data || []} />
                     <MonthlyRevenueChart data={monthlyQuery.data || []} />
                 </div>
 
-                <div className="space-y-6">
-                    <QuickActions />
+                <div>
                     <TopClientsCard data={clientsQuery.data || []} />
-                    <ActivityFeed data={activityQuery.data || []} />
                 </div>
             </div>
         </div>

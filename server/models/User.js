@@ -70,7 +70,12 @@ const userSchema = new mongoose.Schema(
         phone: {
             type: String,
             trim: true,
-            match: [/^[6-9]\d{9}$/, 'Please provide a valid 10-digit Indian phone number'],
+            validate: {
+                validator: function (v) {
+                    return !v || /^[6-9]\d{9}$/.test(v);
+                },
+                message: 'Please provide a valid 10-digit Indian phone number',
+            },
         },
         isActive: {
             type: Boolean,

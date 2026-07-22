@@ -96,6 +96,16 @@ const MapRecenter = ({ center }) => {
     return null;
 };
 
+const formatDuration = (mins) => {
+    if (!mins) return 'N/A';
+    const hrs = Math.floor(mins / 60);
+    const rem = mins % 60;
+    if (hrs > 0) {
+        return `~${hrs}h ${rem}m`;
+    }
+    return `~${rem} mins`;
+};
+
 const Tracking = () => {
     const [shipments, setShipments] = useState([]);
     const [selectedShipment, setSelectedShipment] = useState(null);
@@ -106,6 +116,13 @@ const Tracking = () => {
     const [currentPos, setCurrentPos] = useState(null);
     const [currentSpeed, setCurrentSpeed] = useState(0);
     const [isSimulating, setIsSimulating] = useState(false);
+
+    // OSRM routing & simulated telemetry HUD state
+    const [routePolyline, setRoutePolyline] = useState([]);
+    const [routeDistance, setRouteDistance] = useState(0);
+    const [routeDuration, setRouteDuration] = useState(0);
+    const [simulatedRemainingDistance, setSimulatedRemainingDistance] = useState(null);
+    const [simulatedRemainingDuration, setSimulatedRemainingDuration] = useState(null);
 
     const socketRef = useRef(null);
     const simIntervalRef = useRef(null);
@@ -163,9 +180,40 @@ const Tracking = () => {
     useEffect(() => {
         if (!selectedShipment) return;
 
-        const originCoords = getCityCoords(selectedShipment.origin?.city, [21.2514, 81.6296]);
-        setCurrentPos(originCoords);
+        const origin = getCityCoords(selectedShipment.origin?.city, [21.2514, 81.6296]);
+        const dest = getCityCoords(selectedShipment.destination?.city, [22.0797, 82.1409]);
+        
+        setCurrentPos(origin);
         setCurrentSpeed(58);
+        setSimulatedRemainingDistance(null);
+        setSimulatedRemainingDuration(null);
+
+        // Fetch OSRM Route
+        const fetchOSRMRoute = async () => {
+            try {
+                const url = `https://router.project-osrm.org/route/v1/driving/${origin[1]},${origin[0]};${dest[1]},${dest[0]}?overview=full&geometries=geojson`;
+                const response = await fetch(url);
+                const json = await response.json();
+                if (json.routes && json.routes.length > 0) {
+                    const route = json.routes[0];
+                    const coords = route.geometry.coordinates.map(c => [c[1], c[0]]);
+                    setRoutePolyline(coords);
+                    setRouteDistance(Math.round(route.distance / 1000));
+                    setRouteDuration(Math.round(route.duration / 60));
+                } else {
+                    setRoutePolyline([origin, dest]);
+                    setRouteDistance(selectedShipment.distance || 150);
+                    setRouteDuration(180);
+                }
+            } catch (err) {
+                console.error("OSRM API error:", err);
+                setRoutePolyline([origin, dest]);
+                setRouteDistance(selectedShipment.distance || 150);
+                setRouteDuration(180);
+            }
+        };
+
+        fetchOSRMRoute();
 
         if (socketRef.current) {
             socketRef.current.emit('join_shipment', selectedShipment._id);
@@ -190,30 +238,37 @@ const Tracking = () => {
         if (isSimulating) {
             clearInterval(simIntervalRef.current);
             setIsSimulating(false);
+            setSimulatedRemainingDistance(null);
+            setSimulatedRemainingDuration(null);
             return;
         }
 
-        if (!selectedShipment) return;
-
-        const origin = getCityCoords(selectedShipment.origin?.city, [21.2514, 81.6296]);
-        const dest = getCityCoords(selectedShipment.destination?.city, [22.0797, 82.1409]);
+        if (!selectedShipment || routePolyline.length === 0) return;
 
         let step = 0;
-        const totalSteps = 20;
         setIsSimulating(true);
 
         simIntervalRef.current = setInterval(async () => {
             step++;
-            if (step > totalSteps) {
+            if (step >= routePolyline.length) {
                 step = 0;
             }
 
-            const lat = origin[0] + (dest[0] - origin[0]) * (step / totalSteps);
-            const lng = origin[1] + (dest[1] - origin[1]) * (step / totalSteps);
+            const pos = routePolyline[step];
+            const lat = pos[0];
+            const lng = pos[1];
             const speed = Math.floor(50 + Math.random() * 20);
 
             setCurrentPos([lat, lng]);
             setCurrentSpeed(speed);
+
+            // Recalculate remaining distance/ETA duration along the polyline path
+            const ratioRemaining = 1 - (step / (routePolyline.length - 1));
+            const remainingDist = Math.max(Math.round(routeDistance * ratioRemaining), 0);
+            const remainingDur = Math.max(Math.round(routeDuration * ratioRemaining), 0);
+
+            setSimulatedRemainingDistance(remainingDist);
+            setSimulatedRemainingDuration(remainingDur);
 
             // Broadcast to backend via REST fallback
             try {
@@ -221,7 +276,7 @@ const Tracking = () => {
             } catch (e) {
                 // Silent catch for simulation
             }
-        }, 3000);
+        }, 2000);
     };
 
     useEffect(() => {
@@ -341,7 +396,9 @@ const Tracking = () => {
                                 </div>
                                 <div>
                                     <p className="text-[10px] text-slate-500 font-bold uppercase">Route Distance</p>
-                                    <p className="text-sm font-bold text-white">{selectedShipment.distance || 150} km</p>
+                                    <p className="text-sm font-bold text-white">
+                                        {simulatedRemainingDistance !== null ? `${simulatedRemainingDistance} km` : `${routeDistance || selectedShipment.distance || 150} km`}
+                                    </p>
                                 </div>
                             </div>
 
@@ -351,7 +408,9 @@ const Tracking = () => {
                                 </div>
                                 <div>
                                     <p className="text-[10px] text-slate-500 font-bold uppercase">Est. ETA</p>
-                                    <p className="text-sm font-bold text-white">~3 hrs 45 mins</p>
+                                    <p className="text-sm font-bold text-white">
+                                        {formatDuration(simulatedRemainingDuration !== null ? simulatedRemainingDuration : routeDuration || 180)}
+                                    </p>
                                 </div>
                             </div>
 
@@ -414,7 +473,7 @@ const Tracking = () => {
 
                             {/* Route Polyline */}
                             <Polyline
-                                positions={[originCoords, destCoords]}
+                                positions={routePolyline.length > 0 ? routePolyline : [originCoords, destCoords]}
                                 pathOptions={{ color: '#3B82F6', weight: 4, dashArray: '8, 8', opacity: 0.8 }}
                             />
                         </MapContainer>
