@@ -167,14 +167,14 @@ const Dashboard = () => {
             </motion.div>
 
             {/* Top Operational Row: Quick Actions, Live Activity & Delayed Alert */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-                <div className="lg:col-span-2">
-                    <QuickActions />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+                <div className="lg:col-span-2 h-full">
+                    <QuickActions className="h-full" />
                 </div>
-                <div className="space-y-6">
+                <div className="space-y-6 h-full flex flex-col justify-start">
                     {/* Delayed Shipments Alert (Compact, collapsible, and placed in side column) */}
                     <DelayedShipmentsAlert data={delayedQuery.data?.data || []} />
-                    <ActivityFeed data={activityQuery.data || []} />
+                    <ActivityFeed className="flex-1" data={activityQuery.data || []} />
                 </div>
             </div>
 

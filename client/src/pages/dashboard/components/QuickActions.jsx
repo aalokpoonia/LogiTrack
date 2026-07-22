@@ -9,7 +9,7 @@ import { Plus, Users, Search, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../../constants/routes';
 
-const QuickActions = () => {
+const QuickActions = ({ className = '' }) => {
     const navigate = useNavigate();
 
     const actions = [
@@ -48,9 +48,9 @@ const QuickActions = () => {
     ];
 
     return (
-        <div className="glass-card p-5">
+        <div className={`glass-card p-5 flex flex-col ${className}`}>
             <h2 className="text-slate-300 font-semibold text-sm mb-4 pl-2.5 border-l-2 border-blue-500">Quick Actions</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1">
                 {actions.map((act) => (
                     <button
                         key={act.title}

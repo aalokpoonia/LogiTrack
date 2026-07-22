@@ -29,9 +29,9 @@ const formatTimeAgo = (dateStr) => {
     return `${diffDay}d ago`;
 };
 
-const ActivityFeed = ({ data = [] }) => {
+const ActivityFeed = ({ data = [], className = '' }) => {
     return (
-        <div className="glass-card p-5">
+        <div className={`glass-card p-5 ${className}`}>
             <h2 className="text-slate-300 font-semibold text-sm mb-4 pl-2.5 border-l-2 border-emerald-500">Live Activity Feed</h2>
 
             {data.length === 0 ? (
