@@ -75,7 +75,7 @@ const Users = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-xl font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                    <h1 className="text-xl font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
                         <UsersIcon className="w-5 h-5 text-blue-500" />
                         User Account Directory
                     </h1>
@@ -124,7 +124,7 @@ const Users = () => {
                                 return (
                                     <tr key={u._id}>
                                         {/* User Info */}
-                                        <td style={{ paddingLeft: '1.25rem' }} className="py-4 font-semibold text-white">
+                                        <td style={{ paddingLeft: '1.25rem' }} className="py-4 font-semibold text-slate-200">
                                             <div className="flex items-center gap-3">
                                                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${isSelf
                                                         ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
@@ -221,16 +221,9 @@ const Users = () => {
             {/* Create Account Modal */}
             {isCreateOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div
-                        className="w-full max-w-sm rounded-2xl border p-5"
-                        style={{
-                            background: 'rgba(13, 20, 36, 0.98)',
-                            borderColor: 'rgba(255,255,255,0.08)',
-                            boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.5)',
-                        }}
-                    >
+                    <div className="w-full max-w-sm rounded-2xl p-5 glass-modal">
                         <div className="flex items-center justify-between border-b border-slate-900 pb-3 mb-4">
-                            <h3 className="text-white font-bold text-sm flex items-center gap-1.5">
+                            <h3 className="text-slate-200 font-bold text-sm flex items-center gap-1.5">
                                 <KeyRound className="w-4 h-4 text-blue-500" />
                                 Register User Account
                             </h3>
@@ -266,7 +259,7 @@ const Users = () => {
                                     required
                                     placeholder="Enter employee name"
                                     {...register('name')}
-                                    className="w-full bg-slate-950 border border-slate-850 rounded px-3 py-2 text-white focus:outline-none focus:border-blue-500"
+                                    className="w-full bg-slate-950 border border-slate-850 rounded px-3 py-2 text-slate-200 focus:outline-none focus:border-blue-500"
                                 />
                             </div>
 
@@ -277,7 +270,7 @@ const Users = () => {
                                     required
                                     placeholder="name@logitrack.com"
                                     {...register('email')}
-                                    className="w-full bg-slate-950 border border-slate-850 rounded px-3 py-2 text-white focus:outline-none focus:border-blue-500"
+                                    className="w-full bg-slate-950 border border-slate-850 rounded px-3 py-2 text-slate-200 focus:outline-none focus:border-blue-500"
                                 />
                             </div>
 
@@ -288,7 +281,7 @@ const Users = () => {
                                     required
                                     placeholder="Enter password"
                                     {...register('password')}
-                                    className="w-full bg-slate-950 border border-slate-850 rounded px-3 py-2 text-white focus:outline-none focus:border-blue-500"
+                                    className="w-full bg-slate-950 border border-slate-850 rounded px-3 py-2 text-slate-200 focus:outline-none focus:border-blue-500"
                                 />
                             </div>
 
@@ -298,7 +291,7 @@ const Users = () => {
                                     type="text"
                                     placeholder="9876543210"
                                     {...register('phone')}
-                                    className="w-full bg-slate-950 border border-slate-850 rounded px-3 py-2 text-white focus:outline-none focus:border-blue-500"
+                                    className="w-full bg-slate-950 border border-slate-850 rounded px-3 py-2 text-slate-200 focus:outline-none focus:border-blue-500"
                                 />
                             </div>
 
@@ -307,7 +300,7 @@ const Users = () => {
                                 <select
                                     required
                                     {...register('role')}
-                                    className="w-full bg-slate-950 border border-slate-850 rounded px-3 py-2 text-white focus:outline-none focus:border-blue-500"
+                                    className="w-full bg-slate-950 border border-slate-850 rounded px-3 py-2 text-slate-200 focus:outline-none focus:border-blue-500"
                                 >
                                     {ROLE_OPTIONS.map(opt => (
                                         <option key={opt.value} value={opt.value}>{opt.label}</option>

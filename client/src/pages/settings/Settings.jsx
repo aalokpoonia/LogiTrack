@@ -40,7 +40,7 @@ const Settings = () => {
         <div className="space-y-6 max-w-2xl">
             {/* Header */}
             <div>
-                <h1 className="text-xl font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                <h1 className="text-xl font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
                     <SettingsIcon className="w-5 h-5 text-blue-500" />
                     Account Preferences & Settings
                 </h1>
@@ -52,7 +52,7 @@ const Settings = () => {
             {/* Profile Editing Form */}
             <div className="bg-slate-900 border border-slate-850 rounded-2xl p-6 space-y-6">
                 <div>
-                    <h3 className="text-white font-bold text-sm flex items-center gap-2">
+                    <h3 className="text-slate-200 font-bold text-sm flex items-center gap-2">
                         <User className="w-4.5 h-4.5 text-blue-400" />
                         Edit Dispatch Profile
                     </h3>
@@ -68,7 +68,7 @@ const Settings = () => {
                                 type="text"
                                 required
                                 {...register('name')}
-                                className="w-full bg-slate-950 border border-slate-800 rounded px-3 py-2 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                className="w-full bg-slate-950 border border-slate-800 rounded px-3 py-2 text-slate-200 focus:outline-none focus:border-blue-500 transition-colors"
                             />
                         </div>
 
@@ -79,7 +79,7 @@ const Settings = () => {
                                 type="email"
                                 required
                                 {...register('email')}
-                                className="w-full bg-slate-950 border border-slate-800 rounded px-3 py-2 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                className="w-full bg-slate-950 border border-slate-800 rounded px-3 py-2 text-slate-200 focus:outline-none focus:border-blue-500 transition-colors"
                             />
                         </div>
 
@@ -89,7 +89,7 @@ const Settings = () => {
                             <input
                                 type="text"
                                 {...register('phone')}
-                                className="w-full bg-slate-950 border border-slate-800 rounded px-3 py-2 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                className="w-full bg-slate-950 border border-slate-800 rounded px-3 py-2 text-slate-200 focus:outline-none focus:border-blue-500 transition-colors"
                             />
                         </div>
 

@@ -85,7 +85,7 @@ const Reports = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-xl font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                    <h1 className="text-xl font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
                         <BarChart2 className="w-5 h-5 text-blue-500" />
                         Billing & Operations Reports
                     </h1>
@@ -121,7 +121,7 @@ const Reports = () => {
                         placeholder="Search LR or Truck..."
                         value={search}
                         onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-                        className="w-full bg-slate-950/60 border border-slate-800 text-white px-9 py-2 rounded-lg text-xs focus:outline-none focus:border-blue-500 transition-colors"
+                        className="w-full bg-slate-950/60 border border-slate-800 text-slate-200 px-9 py-2 rounded-lg text-xs focus:outline-none focus:border-blue-500 transition-colors"
                     />
                 </div>
 
@@ -182,7 +182,7 @@ const Reports = () => {
                     </div>
                     <div>
                         <p className="text-[10px] text-slate-500 font-bold uppercase">Base Freight Total</p>
-                        <p className="text-base font-bold text-white">₹{totalFreight.toLocaleString('en-IN')}</p>
+                        <p className="text-base font-bold text-slate-200">₹{totalFreight.toLocaleString('en-IN')}</p>
                     </div>
                 </div>
 
@@ -192,7 +192,7 @@ const Reports = () => {
                     </div>
                     <div>
                         <p className="text-[10px] text-slate-500 font-bold uppercase">Net Profit Margin</p>
-                        <p className="text-base font-bold text-white">₹{totalProfit.toLocaleString('en-IN')}</p>
+                        <p className="text-base font-bold text-slate-200">₹{totalProfit.toLocaleString('en-IN')}</p>
                     </div>
                 </div>
 
@@ -202,7 +202,7 @@ const Reports = () => {
                     </div>
                     <div>
                         <p className="text-[10px] text-slate-500 font-bold uppercase">Outstanding Receivables</p>
-                        <p className="text-base font-bold text-white">₹{totalOutstanding.toLocaleString('en-IN')}</p>
+                        <p className="text-base font-bold text-slate-200">₹{totalOutstanding.toLocaleString('en-IN')}</p>
                     </div>
                 </div>
             </div>
@@ -242,7 +242,7 @@ const Reports = () => {
                             <tbody>
                                 {reportData?.data.map((s) => (
                                     <tr key={s._id}>
-                                        <td style={{ paddingLeft: '1.25rem' }} className="py-4 font-semibold text-white uppercase">{s.lrNumber}</td>
+                                        <td style={{ paddingLeft: '1.25rem' }} className="py-4 font-semibold text-slate-200 uppercase">{s.lrNumber}</td>
                                         <td>{new Date(s.bookingDate).toLocaleDateString('en-IN')}</td>
                                         <td className="text-slate-350">{s.client?.companyName || 'N/A'}</td>
                                         <td className="text-slate-300 font-medium">

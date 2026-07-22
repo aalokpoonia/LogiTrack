@@ -75,7 +75,7 @@ const Analytics = () => {
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-xl font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                    <h1 className="text-xl font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
                         <BarChart2 className="w-5 h-5 text-blue-500" />
                         Executive Analytics Dashboard
                     </h1>
@@ -112,7 +112,7 @@ const Analytics = () => {
                         onChange={(e) => setEndDate(e.target.value)}
                         className="bg-slate-950/60 border border-slate-800 text-slate-300 text-[10px] px-2 py-1.5 rounded focus:outline-none focus:border-blue-500"
                     />
-                    <button onClick={() => refetch()} className="p-1.5 text-slate-500 hover:text-white transition-colors">
+                     <button onClick={() => refetch()} className="p-1.5 text-slate-500 hover:text-slate-200 transition-colors">
                         <RefreshCw className="w-3.5 h-3.5" />
                     </button>
                 </div>
@@ -127,7 +127,7 @@ const Analytics = () => {
                     </div>
                     <div>
                         <p className="text-[10px] text-slate-500 font-bold uppercase">Total Revenue</p>
-                        <p className="text-base font-bold text-white">₹{summary?.totalRevenue?.toLocaleString('en-IN')}</p>
+                         <p className="text-base font-bold text-slate-200">₹{summary?.totalRevenue?.toLocaleString('en-IN')}</p>
                     </div>
                 </div>
 
@@ -138,7 +138,7 @@ const Analytics = () => {
                     </div>
                     <div>
                         <p className="text-[10px] text-slate-500 font-bold uppercase">Vendor Payouts</p>
-                        <p className="text-base font-bold text-white">₹{summary?.totalPayout?.toLocaleString('en-IN')}</p>
+                         <p className="text-base font-bold text-slate-200">₹{summary?.totalPayout?.toLocaleString('en-IN')}</p>
                     </div>
                 </div>
 
@@ -149,7 +149,7 @@ const Analytics = () => {
                     </div>
                     <div>
                         <p className="text-[10px] text-slate-500 font-bold uppercase">Net Margin (Profit)</p>
-                        <p className="text-base font-bold text-white">₹{summary?.totalProfit?.toLocaleString('en-IN')}</p>
+                         <p className="text-base font-bold text-slate-200">₹{summary?.totalProfit?.toLocaleString('en-IN')}</p>
                     </div>
                 </div>
 
@@ -160,7 +160,7 @@ const Analytics = () => {
                     </div>
                     <div>
                         <p className="text-[10px] text-slate-500 font-bold uppercase">Margin Ratio</p>
-                        <p className="text-base font-bold text-white">{profitMarginPercent}%</p>
+                         <p className="text-base font-bold text-slate-200">{profitMarginPercent}%</p>
                     </div>
                 </div>
 
@@ -171,7 +171,7 @@ const Analytics = () => {
                     </div>
                     <div>
                         <p className="text-[10px] text-slate-500 font-bold uppercase">Total Bookings</p>
-                        <p className="text-base font-bold text-white">{summary?.totalShipments} LRs</p>
+                         <p className="text-base font-bold text-slate-200">{summary?.totalShipments} LRs</p>
                     </div>
                 </div>
             </div>
@@ -181,7 +181,7 @@ const Analytics = () => {
                 {/* Line Area Chart: Revenue vs Profit Trend */}
                 <div className="lg:col-span-2 bg-slate-900 border border-slate-850 p-5 rounded-2xl space-y-4">
                     <div>
-                        <h3 className="text-white font-bold text-sm tracking-wide flex items-center gap-1.5">
+                        <h3 className="text-slate-200 font-bold text-sm tracking-wide flex items-center gap-1.5">
                             <TrendingUp className="w-4 h-4 text-blue-500" />
                             Revenue vs Margin Trend
                         </h3>
@@ -205,8 +205,8 @@ const Analytics = () => {
                                 <XAxis dataKey="month" stroke="#64748B" fontSize={10} tickLine={false} />
                                 <YAxis stroke="#64748B" fontSize={10} tickLine={false} />
                                 <Tooltip
-                                    contentStyle={{ background: '#0D1424', borderColor: 'rgba(255,255,255,0.08)', borderRadius: '12px' }}
-                                    labelStyle={{ color: 'white', fontWeight: 'bold' }}
+                                     contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-color)', borderRadius: '12px' }}
+                                     labelStyle={{ color: 'var(--text-primary)', fontWeight: 'bold' }}
                                 />
                                 <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '10px' }} />
                                 <Area type="monotone" name="Revenue" dataKey="revenue" stroke="#3B82F6" strokeWidth={2.5} fillOpacity={1} fill="url(#colorRevenue)" />
@@ -219,7 +219,7 @@ const Analytics = () => {
                 {/* Bar Chart: Route performance */}
                 <div className="bg-slate-900 border border-slate-850 p-5 rounded-2xl space-y-4">
                     <div>
-                        <h3 className="text-white font-bold text-sm tracking-wide flex items-center gap-1.5">
+                        <h3 className="text-slate-200 font-bold text-sm tracking-wide flex items-center gap-1.5">
                             <Map className="w-4 h-4 text-emerald-400" />
                             Top Corridor Routes
                         </h3>
@@ -235,7 +235,7 @@ const Analytics = () => {
                                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
                                     <XAxis type="number" stroke="#64748B" fontSize={9} />
                                     <YAxis dataKey="route" type="category" stroke="#64748B" fontSize={9} width={90} tickLine={false} />
-                                    <Tooltip contentStyle={{ background: '#0D1424', borderColor: 'rgba(255,255,255,0.08)', borderRadius: '12px' }} />
+                                     <Tooltip contentStyle={{ background: 'var(--bg-secondary)', borderColor: 'var(--border-color)', borderRadius: '12px' }} />
                                     <Bar dataKey="count" name="Bookings" fill="#3B82F6" radius={[0, 4, 4, 0]} barSize={12} />
                                 </BarChart>
                             </ResponsiveContainer>
@@ -249,7 +249,7 @@ const Analytics = () => {
                 {/* Table: Top Clients */}
                 <div className="lg:col-span-2 bg-slate-900 border border-slate-850 p-5 rounded-2xl space-y-4">
                     <div>
-                        <h3 className="text-white font-bold text-sm tracking-wide flex items-center gap-1.5">
+                        <h3 className="text-slate-200 font-bold text-sm tracking-wide flex items-center gap-1.5">
                             <Award className="w-4 h-4 text-amber-500" />
                             Key Client Accounts
                         </h3>
@@ -269,7 +269,7 @@ const Analytics = () => {
                             <tbody>
                                 {topClients?.map((c, idx) => (
                                     <tr key={c._id || idx}>
-                                        <td className="font-semibold text-white py-3">{c.companyName}</td>
+                                         <td className="font-semibold text-slate-200 py-3">{c.companyName}</td>
                                         <td>{c.shipmentsCount} shipments</td>
                                         <td>₹{c.revenue?.toLocaleString('en-IN')}</td>
                                         <td className="text-emerald-400 font-semibold">₹{c.totalProfit?.toLocaleString('en-IN')}</td>
@@ -288,7 +288,7 @@ const Analytics = () => {
                 {/* Pie Chart: Payment Status distribution */}
                 <div className="bg-slate-900 border border-slate-850 p-5 rounded-2xl space-y-4">
                     <div>
-                        <h3 className="text-white font-bold text-sm tracking-wide flex items-center gap-1.5">
+                        <h3 className="text-slate-200 font-bold text-sm tracking-wide flex items-center gap-1.5">
                             <CreditCard className="w-4 h-4 text-purple-400" />
                             Payment Collection Status
                         </h3>
