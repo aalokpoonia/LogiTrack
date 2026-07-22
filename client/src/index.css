@@ -32,6 +32,7 @@
 
   --glass-card-bg: rgba(24, 24, 27, 0.8);
   --input-bg: rgba(255, 255, 255, 0.02);
+  --modal-bg: rgba(18, 18, 20, 0.98);
 }
 
 .light {
@@ -49,6 +50,7 @@
 
   --glass-card-bg: rgba(255, 255, 255, 0.9);
   --input-bg: rgba(0, 0, 0, 0.01);
+  --modal-bg: rgba(255, 255, 255, 0.98);
 }
 
 /* ─── TAILWIND THEME TOKENS ─────────────────────────────────────────────────── */
@@ -176,6 +178,14 @@ body {
   transform: translateY(-2px);
   border-color: var(--border-color-strong);
   box-shadow: 0 12px 20px -10px rgba(0, 0, 0, 0.12), 0 0 20px -5px rgba(59, 130, 246, 0.05);
+}
+
+.glass-modal {
+  background: var(--modal-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
 }
 
 .glass-hover:hover {

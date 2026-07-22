@@ -294,7 +294,7 @@ const Tracking = () => {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-xl font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                    <h1 className="text-xl font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
                         <MapPin className="w-5 h-5 text-blue-500" />
                         Live GPS Route Tracking
                     </h1>
@@ -333,7 +333,7 @@ const Tracking = () => {
                 <div className="lg:col-span-1 space-y-3">
                     <div className="flex items-center justify-between px-1">
                         <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Fleet ({shipments.length})</span>
-                        <button onClick={fetchActiveShipments} className="text-slate-500 hover:text-white transition-colors">
+                        <button onClick={fetchActiveShipments} className="text-slate-500 hover:text-slate-200 transition-colors">
                             <RefreshCw className="w-3.5 h-3.5" />
                         </button>
                     </div>
@@ -353,12 +353,12 @@ const Tracking = () => {
                                         key={s._id}
                                         onClick={() => setSelectedShipment(s)}
                                         className={`p-3.5 rounded-xl border transition-all cursor-pointer ${isSelected
-                                                ? 'bg-blue-950/40 border-blue-500/60 shadow-lg'
+                                                ? 'bg-blue-500/10 dark:bg-blue-950/40 border-blue-500/60 shadow-lg'
                                                 : 'bg-slate-900/60 border-slate-900 hover:border-slate-800'
                                             }`}
                                     >
                                         <div className="flex justify-between items-start mb-1">
-                                            <span className="font-bold text-white text-xs">{s.lrNumber}</span>
+                                            <span className="font-bold text-slate-200 text-xs">{s.lrNumber}</span>
                                             <span className="badge badge-info">{s.status?.replace('_', ' ')}</span>
                                         </div>
                                         <div className="text-[11px] text-slate-300 font-semibold mb-1">
@@ -386,7 +386,7 @@ const Tracking = () => {
                                 </div>
                                 <div>
                                     <p className="text-[10px] text-slate-500 font-bold uppercase">Current Speed</p>
-                                    <p className="text-sm font-bold text-white">{currentSpeed} km/h</p>
+                                    <p className="text-sm font-bold text-slate-200">{currentSpeed} km/h</p>
                                 </div>
                             </div>
 
@@ -396,7 +396,7 @@ const Tracking = () => {
                                 </div>
                                 <div>
                                     <p className="text-[10px] text-slate-500 font-bold uppercase">Route Distance</p>
-                                    <p className="text-sm font-bold text-white">
+                                    <p className="text-sm font-bold text-slate-200">
                                         {simulatedRemainingDistance !== null ? `${simulatedRemainingDistance} km` : `${routeDistance || selectedShipment.distance || 150} km`}
                                     </p>
                                 </div>
@@ -408,7 +408,7 @@ const Tracking = () => {
                                 </div>
                                 <div>
                                     <p className="text-[10px] text-slate-500 font-bold uppercase">Est. ETA</p>
-                                    <p className="text-sm font-bold text-white">
+                                    <p className="text-sm font-bold text-slate-200">
                                         {formatDuration(simulatedRemainingDuration !== null ? simulatedRemainingDuration : routeDuration || 180)}
                                     </p>
                                 </div>
@@ -420,7 +420,7 @@ const Tracking = () => {
                                 </div>
                                 <div>
                                     <p className="text-[10px] text-slate-500 font-bold uppercase">Driver Status</p>
-                                    <p className="text-sm font-bold text-white truncate max-w-[90px]">
+                                    <p className="text-sm font-bold text-slate-200 truncate max-w-[90px]">
                                         {selectedShipment.driverName || 'On Duty'}
                                     </p>
                                 </div>

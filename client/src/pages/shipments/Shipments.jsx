@@ -317,7 +317,7 @@ const Shipments = () => {
             {/* Header section */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-xl font-bold text-white uppercase tracking-wider">Shipment bookings</h1>
+                    <h1 className="text-xl font-bold text-slate-200 uppercase tracking-wider">Shipment bookings</h1>
                     <p className="text-slate-500 text-xs mt-0.5">Manage freight bookings, lorry receipts, routing timelines, and financial profit calculation.</p>
                 </div>
                 <button
@@ -339,7 +339,7 @@ const Shipments = () => {
                         placeholder="Search LR or Truck..."
                         value={search}
                         onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-                        className="w-full bg-slate-950/60 border border-slate-800 text-white px-9 py-2 rounded-lg text-xs focus:outline-none focus:border-blue-500 transition-colors"
+                        className="w-full bg-slate-950/60 border border-slate-800 text-slate-200 px-9 py-2 rounded-lg text-xs focus:outline-none focus:border-blue-500 transition-colors"
                     />
                 </div>
 
@@ -427,7 +427,7 @@ const Shipments = () => {
                             <tbody>
                                 {shipmentsData?.data.map((s) => (
                                     <tr key={s._id}>
-                                        <td style={{ paddingLeft: '1.25rem' }} className="py-4 font-semibold text-white">
+                                        <td style={{ paddingLeft: '1.25rem' }} className="py-4 font-semibold text-slate-200">
                                             <div>
                                                 <span className="text-xs uppercase tracking-wider">{s.lrNumber}</span>
                                                 {s.goodsDescription && (
@@ -443,9 +443,9 @@ const Shipments = () => {
                                         </td>
                                         <td className="text-slate-350 text-xs">
                                             <div className="flex items-center gap-1.5">
-                                                <span className="font-semibold text-white">{s.origin?.city}</span>
+                                                <span className="font-semibold text-slate-200">{s.origin?.city}</span>
                                                 <ArrowRight className="w-3 h-3 text-slate-500" />
-                                                <span className="font-semibold text-white">{s.destination?.city}</span>
+                                                <span className="font-semibold text-slate-200">{s.destination?.city}</span>
                                             </div>
                                             <div className="text-[10px] text-slate-500 mt-0.5 space-y-0.5">
                                                 <div>Entered: {s.distance ? `${s.distance} km` : 'N/A'}</div>
@@ -457,7 +457,7 @@ const Shipments = () => {
                                             </div>
                                         </td>
                                         <td className="text-slate-350 text-xs">
-                                            <div className="font-semibold text-white">{s.vehicleNumber || 'Unassigned'}</div>
+                                            <div className="font-semibold text-slate-200">{s.vehicleNumber || 'Unassigned'}</div>
                                             <div className="text-[10px] text-slate-500 mt-0.5">
                                                 {s.driverName || 'No Driver'} {s.driverPhone ? `(${s.driverPhone})` : ''}
                                             </div>
@@ -580,16 +580,9 @@ const Shipments = () => {
             {/* Create/Edit Form Modal */}
             {isFormOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div
-                        className="w-full max-w-2xl rounded-2xl border p-6 flex flex-col justify-between overflow-y-auto max-h-[90vh]"
-                        style={{
-                            background: 'rgba(13, 20, 36, 0.98)',
-                            borderColor: 'rgba(255,255,255,0.08)',
-                            boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.5)',
-                        }}
-                    >
+                    <div className="w-full max-w-2xl rounded-2xl p-6 flex flex-col justify-between overflow-y-auto max-h-[90vh] glass-modal">
                         <div className="flex items-center justify-between border-b border-slate-900 pb-3 mb-4">
-                            <h3 className="text-white font-bold text-sm uppercase tracking-wider">
+                            <h3 className="text-slate-200 font-bold text-sm uppercase tracking-wider">
                                 {selectedShipment ? `Modify Shipment booking: ${selectedShipment.lrNumber}` : 'Book New Shipment (Lorry Receipt)'}
                             </h3>
                             <button onClick={() => setIsFormOpen(false)} className="text-slate-400 hover:text-white transition-colors">
@@ -940,16 +933,9 @@ const Shipments = () => {
             {/* Status Change Modal */}
             {isStatusUpdateOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div
-                        className="w-full max-w-sm rounded-2xl border p-5"
-                        style={{
-                            background: 'rgba(13, 20, 36, 0.98)',
-                            borderColor: 'rgba(255,255,255,0.08)',
-                            boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.5)',
-                        }}
-                    >
+                    <div className="w-full max-w-sm rounded-2xl p-5 glass-modal">
                         <div className="flex items-center justify-between border-b border-slate-900 pb-3 mb-4">
-                            <h3 className="text-white font-bold text-sm">Update Shipment Status</h3>
+                            <h3 className="text-slate-200 font-bold text-sm">Update Shipment Status</h3>
                             <button onClick={() => setIsStatusUpdateOpen(false)} className="text-slate-400 hover:text-white transition-colors">
                                 <X className="w-4 h-4" />
                             </button>
@@ -1003,17 +989,10 @@ const Shipments = () => {
             {/* Timeline View Modal */}
             {isTimelineOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div
-                        className="w-full max-w-md rounded-2xl border p-5 flex flex-col max-h-[80vh]"
-                        style={{
-                            background: 'rgba(13, 20, 36, 0.98)',
-                            borderColor: 'rgba(255,255,255,0.08)',
-                            boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.5)',
-                        }}
-                    >
+                    <div className="w-full max-w-md rounded-2xl p-5 flex flex-col max-h-[80vh] glass-modal">
                         <div className="flex items-center justify-between border-b border-slate-900 pb-3 mb-4">
                             <div>
-                                <h3 className="text-white font-bold text-sm">Status Timeline</h3>
+                                <h3 className="text-slate-200 font-bold text-sm">Status Timeline</h3>
                                 <p className="text-[10px] text-slate-500 mt-0.5">Lorry Receipt: {timelineData?.lrNumber || '...'}</p>
                             </div>
                             <button onClick={() => setIsTimelineOpen(false)} className="text-slate-400 hover:text-white transition-colors">
@@ -1074,16 +1053,9 @@ const Shipments = () => {
             {/* POD Upload Modal */}
             {isPodUploadOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div
-                        className="w-full max-w-sm rounded-2xl border p-5"
-                        style={{
-                            background: 'rgba(13, 20, 36, 0.98)',
-                            borderColor: 'rgba(255,255,255,0.08)',
-                            boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.5)',
-                        }}
-                    >
+                    <div className="w-full max-w-sm rounded-2xl p-5 glass-modal">
                         <div className="flex items-center justify-between border-b border-slate-900 pb-3 mb-4">
-                            <h3 className="text-white font-bold text-sm">Upload Proof of Delivery (POD)</h3>
+                            <h3 className="text-slate-200 font-bold text-sm">Upload Proof of Delivery (POD)</h3>
                             <button onClick={() => setIsPodUploadOpen(false)} className="text-slate-400 hover:text-white transition-colors">
                                 <X className="w-4 h-4" />
                             </button>
@@ -1128,20 +1100,13 @@ const Shipments = () => {
             {/* Delete Confirmation Modal */}
             {isDeleteOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div
-                        className="w-full max-w-sm rounded-2xl border p-5"
-                        style={{
-                            background: 'rgba(13, 20, 36, 0.98)',
-                            borderColor: 'rgba(244, 63, 94, 0.2)',
-                            boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.5)',
-                        }}
-                    >
+                    <div className="w-full max-w-sm rounded-2xl p-5 glass-modal border-rose-500/20">
                         <div className="flex items-start gap-3 mb-4">
                             <div className="w-10 h-10 rounded-full bg-rose-500/10 flex items-center justify-center flex-shrink-0">
                                 <ShieldAlert className="w-5 h-5 text-rose-500" />
                             </div>
                             <div>
-                                <h3 className="text-white font-bold text-sm">Cancel & Delete Booking?</h3>
+                                <h3 className="text-slate-200 font-bold text-sm">Cancel & Delete Booking?</h3>
                                 <p className="text-slate-400 text-xs mt-1 leading-relaxed">
                                     Are you sure you want to soft-delete <strong>{selectedShipment?.lrNumber}</strong>? This will remove it from operational queues and profit aggregations.
                                 </p>
