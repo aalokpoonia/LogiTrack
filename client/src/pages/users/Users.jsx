@@ -26,6 +26,8 @@ const Users = () => {
     const isAdmin = currentUser && currentUser.role === ROLES.ADMIN;
 
     const [isCreateOpen, setIsCreateOpen] = useState(false);
+    const [submitError, setSubmitError] = useState(null);
+    const [submitSuccess, setSubmitSuccess] = useState(false);
 
     const { data: usersData, isLoading, isError } = useUsers();
     const registerMutation = useRegisterUser();
@@ -35,12 +37,20 @@ const Users = () => {
     const { register, handleSubmit, reset } = useForm();
 
     const handleCreateSubmit = async (formData) => {
+        setSubmitError(null);
+        setSubmitSuccess(false);
         try {
             await registerMutation.mutateAsync(formData);
-            setIsCreateOpen(false);
+            setSubmitSuccess(true);
             reset();
+            setTimeout(() => {
+                setIsCreateOpen(false);
+                setSubmitSuccess(false);
+            }, 1500);
         } catch (error) {
             console.error('Registration failed:', error);
+            const backendError = error.response?.data?.message || error.response?.data?.errors?.[0]?.message || error.message || 'Server error occurred';
+            setSubmitError(backendError);
         }
     };
 
@@ -228,6 +238,25 @@ const Users = () => {
                                 <X className="w-4 h-4" />
                             </button>
                         </div>
+
+                        {submitError && (
+                            <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 p-2.5 rounded text-[11px] mb-3 flex items-start gap-2">
+                                <ShieldAlert className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                                <div>
+                                    <p className="font-semibold">Registration Failed</p>
+                                    <p className="font-sans leading-normal">{submitError}</p>
+                                </div>
+                            </div>
+                        )}
+                        {submitSuccess && (
+                            <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-2.5 rounded text-[11px] mb-3 flex items-start gap-2">
+                                <UsersIcon className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                                <div>
+                                    <p className="font-semibold">Registration Successful</p>
+                                    <p className="font-sans leading-normal">User account registered successfully.</p>
+                                </div>
+                            </div>
+                        )}
 
                         <form onSubmit={handleSubmit(handleCreateSubmit)} className="space-y-4 text-xs">
                             <div>

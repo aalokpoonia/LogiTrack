@@ -64,7 +64,7 @@ const registerValidation = [
         .withMessage('Invalid role specified'),
 
     body('phone')
-        .optional()
+        .optional({ checkFalsy: true })
         .matches(/^[6-9]\d{9}$/)
         .withMessage('Please provide a valid 10-digit Indian phone number'),
 

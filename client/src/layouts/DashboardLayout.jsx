@@ -91,6 +91,7 @@ const ROLE_COLORS = {
 const DashboardLayout = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [theme, setTheme] = useState('dark');
+    const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
     const { user, logout } = useAuth();
     const navigate = useNavigate();
 
@@ -295,8 +296,12 @@ const DashboardLayout = () => {
                         </button>
 
                         {/* Notification bell */}
-                        <button className="relative p-2 rounded-lg text-slate-400 hover:text-white transition-colors"
-                            style={{ background: 'rgba(255,255,255,0.04)' }}>
+                        <button
+                            onClick={() => navigate(ROUTES.NOTIFICATIONS)}
+                            className="relative p-2 rounded-lg text-slate-400 hover:text-white transition-colors"
+                            style={{ background: 'rgba(255,255,255,0.04)' }}
+                            title="View Notifications"
+                        >
                             <Bell className="w-4 h-4" />
                             <span
                                 className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full"
@@ -304,13 +309,43 @@ const DashboardLayout = () => {
                             />
                         </button>
 
-                        {/* User avatar */}
-                        <div
-                            className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold cursor-pointer"
-                            style={{ background: 'linear-gradient(135deg, #1d4ed8, #7c3aed)' }}
-                            title={user?.name}
-                        >
-                            {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                        {/* User avatar dropdown */}
+                        <div className="relative">
+                            <button
+                                onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                                className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold cursor-pointer"
+                                style={{ background: 'linear-gradient(135deg, #1d4ed8, #7c3aed)' }}
+                                title={user?.name}
+                            >
+                                {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                            </button>
+                            
+                            {isProfileMenuOpen && (
+                                <div className="absolute right-0 mt-2 w-48 bg-slate-900 border border-slate-800 rounded-xl shadow-xl py-2 z-50 text-xs">
+                                    <div className="px-4 py-2 border-b border-slate-950/40">
+                                        <p className="font-semibold text-white truncate">{user?.name}</p>
+                                        <p className="text-[10px] text-slate-500 truncate">{user?.email}</p>
+                                    </div>
+                                    <button
+                                        onClick={() => {
+                                            setIsProfileMenuOpen(false);
+                                            navigate(ROUTES.SETTINGS);
+                                        }}
+                                        className="w-full text-left px-4 py-2 hover:bg-slate-850 text-slate-350 hover:text-white transition-colors"
+                                    >
+                                        Profile Settings
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            setIsProfileMenuOpen(false);
+                                            handleLogout();
+                                        }}
+                                        className="w-full text-left px-4 py-2 hover:bg-slate-850 text-rose-450 hover:text-rose-450 transition-colors"
+                                    >
+                                        Logout
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </header>
