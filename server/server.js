@@ -1,5 +1,5 @@
 /**
- * LogiTrack AI — Server Bootstrap
+ * LogiTrack — Server Bootstrap
  *
  * MIDDLEWARE ORDER IS CRITICAL — must follow this sequence:
  * 1. CORS — must be FIRST so all responses (including errors) have CORS headers
