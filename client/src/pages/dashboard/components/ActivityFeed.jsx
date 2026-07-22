@@ -31,7 +31,7 @@ const formatTimeAgo = (dateStr) => {
 const ActivityFeed = ({ data = [] }) => {
     return (
         <div className="glass-card p-5">
-            <h2 className="text-white font-semibold text-sm mb-4">Live Activity Feed</h2>
+            <h2 className="text-slate-300 font-semibold text-sm mb-4">Live Activity Feed</h2>
 
             {data.length === 0 ? (
                 <div className="text-center py-6 text-slate-500 text-sm">

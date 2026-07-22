@@ -28,7 +28,7 @@ const RecentShipmentsTable = ({ data = [] }) => {
     return (
         <div className="glass-card p-5">
             <div className="flex items-center justify-between mb-4">
-                <h2 className="text-white font-semibold text-sm">Recent Shipments</h2>
+                <h2 className="text-slate-300 font-semibold text-sm">Recent Shipments</h2>
                 <span className="text-slate-500 text-xs">{data.length} latest</span>
             </div>
 
@@ -78,7 +78,7 @@ const RecentShipmentsTable = ({ data = [] }) => {
                                             </span>
                                         </td>
                                         <td>
-                                            <span className="text-white font-medium text-sm">
+                                            <span className="text-slate-300 font-medium text-sm">
                                                 ₹{Number(s.freightCharge || 0).toLocaleString('en-IN')}
                                             </span>
                                         </td>

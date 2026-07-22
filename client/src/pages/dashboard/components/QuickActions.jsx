@@ -49,7 +49,7 @@ const QuickActions = () => {
 
     return (
         <div className="glass-card p-5">
-            <h2 className="text-white font-semibold text-sm mb-4">Quick Actions</h2>
+            <h2 className="text-slate-300 font-semibold text-sm mb-4">Quick Actions</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {actions.map((act) => (
                     <button

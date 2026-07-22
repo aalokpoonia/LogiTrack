@@ -138,8 +138,7 @@ const DashboardLayout = () => {
                 {filteredNav.map((group) => (
                     <div key={group.group} className="mb-4">
                         <p
-                            className="text-[10px] font-bold uppercase tracking-widest px-3 mb-1"
-                            style={{ color: 'rgba(100, 116, 139, 0.8)' }}
+                            className="text-[10px] font-bold uppercase tracking-widest px-3 mb-1 text-slate-500"
                         >
                             {group.group}
                         </p>

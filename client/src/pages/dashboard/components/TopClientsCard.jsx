@@ -13,7 +13,7 @@ const TopClientsCard = ({ data = [] }) => {
     return (
         <div className="glass-card p-5">
             <div className="flex items-center justify-between mb-4">
-                <h2 className="text-white font-semibold text-sm">Top Clients</h2>
+                <h2 className="text-slate-300 font-semibold text-sm">Top Clients</h2>
                 <span className="text-slate-500 text-xs">By revenue this month</span>
             </div>
 
@@ -46,7 +46,7 @@ const TopClientsCard = ({ data = [] }) => {
                                         </span>
                                     </div>
                                     <div className="text-right flex-shrink-0">
-                                        <span className="text-white text-sm font-semibold">
+                                        <span className="text-slate-300 text-sm font-semibold">
                                             ₹{Number(client.revenue).toLocaleString('en-IN')}
                                         </span>
                                     </div>

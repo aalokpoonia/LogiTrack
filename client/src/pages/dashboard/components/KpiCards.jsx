@@ -96,7 +96,7 @@ const KpiCards = ({ kpis, delayedCount = 0 }) => {
                         </div>
                     </div>
                     <p className="text-slate-400 text-xs font-medium mb-1">{card.title}</p>
-                    <p className="text-white text-2xl font-bold tracking-tight">{card.value}</p>
+                    <p className="text-slate-300 text-2xl font-bold tracking-tight">{card.value}</p>
                     <p className="text-slate-500 text-xs mt-1">{card.sub}</p>
                 </motion.div>
             ))}
