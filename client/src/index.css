@@ -169,6 +169,13 @@ body {
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border-color);
   border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-color-strong);
+  box-shadow: 0 12px 20px -10px rgba(0, 0, 0, 0.12), 0 0 20px -5px rgba(59, 130, 246, 0.05);
 }
 
 .glass-hover:hover {
@@ -353,6 +360,7 @@ body {
   color: var(--text-primary);
   font-size: 0.875rem;
   border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.20s ease-in-out;
 }
 
 .table-dark tr:hover td {

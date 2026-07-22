@@ -13,7 +13,7 @@ const TopClientsCard = ({ data = [] }) => {
     return (
         <div className="glass-card p-5">
             <div className="flex items-center justify-between mb-4">
-                <h2 className="text-slate-300 font-semibold text-sm">Top Clients</h2>
+                <h2 className="text-slate-300 font-semibold text-sm pl-2.5 border-l-2 border-amber-500">Top Clients</h2>
                 <span className="text-slate-500 text-xs">By revenue this month</span>
             </div>
 

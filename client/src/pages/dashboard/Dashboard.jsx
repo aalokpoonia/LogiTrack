@@ -128,7 +128,7 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="space-y-8 pb-8">
+        <div className="space-y-6 pb-8">
             {/* Welcome Banner */}
             <motion.div
                 initial={{ opacity: 0, y: 8 }}
@@ -167,7 +167,7 @@ const Dashboard = () => {
             </motion.div>
 
             {/* Top Operational Row: Quick Actions, Live Activity & Delayed Alert */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
                 <div className="lg:col-span-2">
                     <QuickActions />
                 </div>
@@ -185,7 +185,7 @@ const Dashboard = () => {
             </div>
 
             {/* Main Charts section (Revenue & Profit Trend and Status breakdown) */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2">
                     <RevenueChart data={revenueQuery.data || []} />
                 </div>
@@ -195,8 +195,8 @@ const Dashboard = () => {
             </div>
 
             {/* Detailed tables & stats section */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 space-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2 space-y-6">
                     <RecentShipmentsTable data={recentQuery.data || []} />
                     <MonthlyRevenueChart data={monthlyQuery.data || []} />
                 </div>

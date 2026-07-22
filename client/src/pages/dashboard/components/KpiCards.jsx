@@ -89,8 +89,12 @@ const KpiCards = ({ kpis, delayedCount = 0 }) => {
                 >
                     <div className="flex items-start justify-between mb-3">
                         <div
-                            className="w-10 h-10 rounded-xl flex items-center justify-center"
-                            style={{ background: card.bg }}
+                            className="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300"
+                            style={{ 
+                                background: card.bg,
+                                boxShadow: `0 0 16px -2px ${card.color}33`,
+                                border: `1px solid ${card.color}22`
+                            }}
                         >
                             <card.icon className="w-5 h-5" style={{ color: card.color }} />
                         </div>

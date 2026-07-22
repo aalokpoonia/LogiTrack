@@ -49,20 +49,13 @@ const QuickActions = () => {
 
     return (
         <div className="glass-card p-5">
-            <h2 className="text-slate-300 font-semibold text-sm mb-4">Quick Actions</h2>
+            <h2 className="text-slate-300 font-semibold text-sm mb-4 pl-2.5 border-l-2 border-blue-500">Quick Actions</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {actions.map((act) => (
                     <button
                         key={act.title}
                         onClick={() => navigate(act.path)}
-                        className="flex items-center gap-3 p-3 rounded-xl text-left transition-all duration-150 border border-transparent hover:border-slate-800"
-                        style={{ background: 'rgba(255,255,255,0.02)' }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
-                        }}
+                        className="flex items-center gap-3 p-3 rounded-xl text-left border border-slate-850/60 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 hover:scale-[1.02] hover:border-slate-700/60 hover:shadow-lg"
                     >
                         <div
                             className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"

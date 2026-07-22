@@ -28,7 +28,7 @@ const RecentShipmentsTable = ({ data = [] }) => {
     return (
         <div className="glass-card p-5">
             <div className="flex items-center justify-between mb-4">
-                <h2 className="text-slate-300 font-semibold text-sm">Recent Shipments</h2>
+                <h2 className="text-slate-300 font-semibold text-sm pl-2.5 border-l-2 border-purple-500">Recent Shipments</h2>
                 <span className="text-slate-500 text-xs">{data.length} latest</span>
             </div>
 

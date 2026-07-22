@@ -5,13 +5,14 @@
  */
 
 import { PlusCircle, CheckCircle2, Navigation, FileSignature } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const ICON_MAP = {
-    payment_received: { icon: CheckCircle2, color: '#10B981', bg: 'rgba(16, 185, 129, 0.1)' },
-    delivered: { icon: CheckCircle2, color: '#06b6d4', bg: 'rgba(6, 182, 212, 0.1)' },
-    in_transit: { icon: Navigation, color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.1)' },
-    invoiced: { icon: FileSignature, color: '#8B5CF6', bg: 'rgba(139, 92, 246, 0.1)' },
-    booked: { icon: PlusCircle, color: '#f43f5e', bg: 'rgba(244, 63, 94, 0.1)' },
+    payment_received: { icon: CheckCircle2, color: '#10B981', bg: 'rgba(16, 185, 129, 0.15)' },
+    delivered: { icon: CheckCircle2, color: '#06b6d4', bg: 'rgba(6, 182, 212, 0.15)' },
+    in_transit: { icon: Navigation, color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.15)' },
+    invoiced: { icon: FileSignature, color: '#8B5CF6', bg: 'rgba(139, 92, 246, 0.15)' },
+    booked: { icon: PlusCircle, color: '#f43f5e', bg: 'rgba(244, 63, 94, 0.15)' },
 };
 
 const formatTimeAgo = (dateStr) => {
@@ -31,7 +32,7 @@ const formatTimeAgo = (dateStr) => {
 const ActivityFeed = ({ data = [] }) => {
     return (
         <div className="glass-card p-5">
-            <h2 className="text-slate-300 font-semibold text-sm mb-4">Live Activity Feed</h2>
+            <h2 className="text-slate-300 font-semibold text-sm mb-4 pl-2.5 border-l-2 border-emerald-500">Live Activity Feed</h2>
 
             {data.length === 0 ? (
                 <div className="text-center py-6 text-slate-500 text-sm">
@@ -42,13 +43,22 @@ const ActivityFeed = ({ data = [] }) => {
                     {data.slice(0, 5).map((act, idx) => {
                         const style = ICON_MAP[act.action] || ICON_MAP.booked;
                         return (
-                            <div key={act.id || idx} className="relative">
+                            <motion.div 
+                                key={act.id || idx} 
+                                initial={{ opacity: 0, x: -8 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: idx * 0.08, duration: 0.3 }}
+                                className="relative"
+                            >
                                 {/* Timeline Dot */}
                                 <div
-                                    className="absolute -left-[26px] top-0.5 w-5 h-5 rounded-full flex items-center justify-center border border-slate-900"
-                                    style={{ background: style.bg }}
+                                    className="absolute -left-[27px] top-0.5 w-6 h-6 rounded-full flex items-center justify-center border border-slate-900 shadow-md"
+                                    style={{ 
+                                        background: style.bg,
+                                        borderColor: style.color + '33'
+                                    }}
                                 >
-                                    <style.icon className="w-3 h-3" style={{ color: style.color }} />
+                                    <style.icon className="w-3.5 h-3.5" style={{ color: style.color }} />
                                 </div>
 
                                 <div className="space-y-0.5">
@@ -64,7 +74,7 @@ const ActivityFeed = ({ data = [] }) => {
                                         {act.description}
                                     </p>
                                 </div>
-                            </div>
+                            </motion.div>
                         );
                     })}
                 </div>
