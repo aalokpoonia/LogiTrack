@@ -22,7 +22,16 @@ import Brokers from './pages/masters/Brokers';
 import Vehicles from './pages/masters/Vehicles';
 import Drivers from './pages/masters/Drivers';
 import Shipments from './pages/shipments/Shipments';
+import Tracking from './pages/tracking/Tracking';
+import Analytics from './pages/analytics/Analytics';
+import Reports from './pages/reports/Reports';
+import AIAssistant from './pages/ai/AIAssistant';
+import Users from './pages/users/Users';
+import Settings from './pages/settings/Settings';
+import Notifications from './pages/notifications/Notifications';
 import { ROUTES } from './constants/routes';
+
+
 
 // ─── REACT QUERY CLIENT ───────────────────────────────────────────────────────
 // Configure TanStack Query — our server state management layer.
@@ -83,14 +92,17 @@ const App = () => {
               <Route path={ROUTES.DRIVERS} element={<Drivers />} />
               <Route path={ROUTES.VEHICLES} element={<Vehicles />} />
               <Route path={ROUTES.SHIPMENTS} element={<Shipments />} />
-              <Route path={ROUTES.GPS_TRACKING} element={<ComingSoon title="Live GPS Tracking (Phase 8)" />} />
-              <Route path={ROUTES.BILLING} element={<ComingSoon title="Billing & Invoices (Phase 7)" />} />
-              <Route path={ROUTES.ANALYTICS} element={<ComingSoon title="Analytics & Reports (Phase 9)" />} />
-              <Route path={ROUTES.REPORTS} element={<ComingSoon title="Reports (Phase 9)" />} />
-              <Route path={ROUTES.AI_ASSISTANT} element={<ComingSoon title="AI Assistant (Phase 9)" />} />
-              <Route path={ROUTES.NOTIFICATIONS} element={<ComingSoon title="Notifications (Phase 9)" />} />
-              <Route path={ROUTES.USERS} element={<ComingSoon title="User Management" />} />
-              <Route path={ROUTES.SETTINGS} element={<ComingSoon title="Settings" />} />
+              <Route path={ROUTES.GPS_TRACKING} element={<Tracking />} />
+              <Route path={ROUTES.BILLING} element={<Reports />} />
+              <Route path={ROUTES.ANALYTICS} element={<Analytics />} />
+              <Route path={ROUTES.REPORTS} element={<Reports />} />
+
+              <Route path={ROUTES.AI_ASSISTANT} element={<AIAssistant />} />
+
+              <Route path={ROUTES.NOTIFICATIONS} element={<Notifications />} />
+              <Route path={ROUTES.USERS} element={<Users />} />
+              <Route path={ROUTES.SETTINGS} element={<Settings />} />
+
             </Route>
 
             {/* ── 404 FALLBACK ──────────────────────────────── */}

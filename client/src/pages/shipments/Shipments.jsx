@@ -10,11 +10,13 @@ import { useForm } from 'react-hook-form';
 import {
     Search, Plus, Edit2, Trash2, X, AlertTriangle,
     BadgeInfo, Calendar, Clock, Eye, MapPin, Package,
-    Receipt, CheckCircle, ArrowRight, ShieldAlert, ArrowUpDown
+    Receipt, CheckCircle, ArrowRight, ShieldAlert, ArrowUpDown,
+    Download, Upload, FileText, FileCheck
 } from 'lucide-react';
 import {
-    useShipments, useCreateShipment, useUpdateShipment, useDeleteShipment, useShipmentTimeline
+    useShipments, useCreateShipment, useUpdateShipment, useDeleteShipment, useShipmentTimeline, useUploadShipmentPOD
 } from '../../hooks/useShipments';
+import { getShipmentLRPdfUrl, getShipmentInvoicePdfUrl } from '../../services/shipmentService';
 import { useClients } from '../../hooks/useClients';
 import { useBrokers } from '../../hooks/useBrokers';
 import { useVehicles } from '../../hooks/useVehicles';
@@ -69,6 +71,8 @@ const Shipments = () => {
     const [isTimelineOpen, setIsTimelineOpen] = useState(false);
     const [timelineShipmentId, setTimelineShipmentId] = useState(null);
     const [isStatusUpdateOpen, setIsStatusUpdateOpen] = useState(false);
+    const [isPodUploadOpen, setIsPodUploadOpen] = useState(false);
+    const [selectedPodFile, setSelectedPodFile] = useState(null);
 
     // Form setups
     const { register, handleSubmit, reset, setValue, watch } = useForm();
@@ -107,6 +111,7 @@ const Shipments = () => {
     const createMutation = useCreateShipment();
     const updateMutation = useUpdateShipment();
     const deleteMutation = useDeleteShipment();
+    const uploadPodMutation = useUploadShipmentPOD();
 
     // Autocomplete selections
     const handleBrokerChange = (e) => {
@@ -168,6 +173,8 @@ const Shipments = () => {
             truckOwnerPayment: 0,
             additionalCharges: 0,
             gstAmount: 0,
+            paymentStatus: 'pending',
+            amountPaid: 0,
             expectedDeliveryDate: '',
             notes: '',
             status: 'booked'
@@ -208,10 +215,33 @@ const Shipments = () => {
             truckOwnerPayment: shipment.truckOwnerPayment || 0,
             additionalCharges: shipment.additionalCharges || 0,
             gstAmount: shipment.gstAmount || 0,
+            paymentStatus: shipment.paymentStatus || 'pending',
+            amountPaid: shipment.amountPaid || 0,
             expectedDeliveryDate: formatDateForInput(shipment.expectedDeliveryDate),
             notes: shipment.notes || ''
         });
         setIsFormOpen(true);
+    };
+
+    const handleOpenPodUpload = (shipment) => {
+        setSelectedShipment(shipment);
+        setSelectedPodFile(null);
+        setIsPodUploadOpen(true);
+    };
+
+    const handlePodUploadSubmit = async (e) => {
+        e.preventDefault();
+        if (!selectedShipment || !selectedPodFile) return;
+        try {
+            await uploadPodMutation.mutateAsync({
+                id: selectedShipment._id,
+                file: selectedPodFile,
+            });
+            setIsPodUploadOpen(false);
+            setSelectedPodFile(null);
+        } catch (error) {
+            console.error('POD Upload failed:', error);
+        }
     };
 
     const handleOpenStatusUpdate = (shipment) => {
@@ -451,7 +481,40 @@ const Shipments = () => {
                                             </button>
                                         </td>
                                         <td style={{ paddingRight: '1.25rem' }} className="text-right">
-                                            <div className="flex items-center justify-end gap-2">
+                                            <div className="flex items-center justify-end gap-1.5">
+                                                <button
+                                                    onClick={() => window.open(getShipmentLRPdfUrl(s._id), '_blank')}
+                                                    className="p-1.5 bg-slate-800 hover:bg-slate-700 text-blue-400 rounded transition-colors"
+                                                    title="Download Lorry Receipt (LR) PDF"
+                                                >
+                                                    <FileText className="w-3.5 h-3.5" />
+                                                </button>
+                                                <button
+                                                    onClick={() => window.open(getShipmentInvoicePdfUrl(s._id), '_blank')}
+                                                    className="p-1.5 bg-slate-800 hover:bg-slate-700 text-emerald-400 rounded transition-colors"
+                                                    title="Download Tax Invoice PDF"
+                                                >
+                                                    <Receipt className="w-3.5 h-3.5" />
+                                                </button>
+                                                {s.podImageUrl ? (
+                                                    <a
+                                                        href={s.podImageUrl}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        className="p-1.5 bg-slate-800 hover:bg-slate-700 text-purple-400 rounded transition-colors"
+                                                        title="View Signed POD"
+                                                    >
+                                                        <FileCheck className="w-3.5 h-3.5" />
+                                                    </a>
+                                                ) : (
+                                                    <button
+                                                        onClick={() => handleOpenPodUpload(s)}
+                                                        className="p-1.5 bg-slate-800 hover:bg-slate-700 text-amber-400 rounded transition-colors"
+                                                        title="Upload Proof of Delivery (POD)"
+                                                    >
+                                                        <Upload className="w-3.5 h-3.5" />
+                                                    </button>
+                                                )}
                                                 <button
                                                     onClick={() => handleOpenTimeline(s._id)}
                                                     className="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded transition-colors"
@@ -788,6 +851,27 @@ const Shipments = () => {
                                     />
                                 </div>
 
+                                <div>
+                                    <label className="block text-slate-400 mb-1">Payment Status</label>
+                                    <select
+                                        {...register('paymentStatus')}
+                                        className="w-full bg-slate-950 border border-slate-850 rounded px-3 py-2 text-white focus:outline-none focus:border-blue-500"
+                                    >
+                                        <option value="pending">Pending</option>
+                                        <option value="partial">Partial</option>
+                                        <option value="paid">Fully Paid</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label className="block text-slate-400 mb-1">Amount Paid (₹)</label>
+                                    <input
+                                        type="number"
+                                        {...register('amountPaid', { valueAsNumber: true })}
+                                        className="w-full bg-slate-950 border border-slate-850 rounded px-3 py-2 text-white focus:outline-none focus:border-blue-500 font-semibold"
+                                    />
+                                </div>
+
                                 <div className="md:col-span-2 bg-slate-950 p-2.5 rounded border border-slate-900/60 flex justify-between items-center text-xs">
                                     <span className="text-slate-500">Invoice Total:</span>
                                     <span className="font-bold text-white text-sm">₹{calculatedTotal?.toLocaleString('en-IN')}</span>
@@ -973,6 +1057,60 @@ const Shipments = () => {
                                 Close View
                             </button>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {/* POD Upload Modal */}
+            {isPodUploadOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                    <div
+                        className="w-full max-w-sm rounded-2xl border p-5"
+                        style={{
+                            background: 'rgba(13, 20, 36, 0.98)',
+                            borderColor: 'rgba(255,255,255,0.08)',
+                            boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.5)',
+                        }}
+                    >
+                        <div className="flex items-center justify-between border-b border-slate-900 pb-3 mb-4">
+                            <h3 className="text-white font-bold text-sm">Upload Proof of Delivery (POD)</h3>
+                            <button onClick={() => setIsPodUploadOpen(false)} className="text-slate-400 hover:text-white transition-colors">
+                                <X className="w-4 h-4" />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handlePodUploadSubmit} className="space-y-4 text-xs">
+                            <div>
+                                <p className="text-slate-400 text-xs mb-2">
+                                    LR Number: <strong className="text-white">{selectedShipment?.lrNumber}</strong>
+                                </p>
+                                <label className="block text-slate-400 mb-1">Select File (JPG, PNG, PDF max 5MB)</label>
+                                <input
+                                    type="file"
+                                    required
+                                    accept="image/jpeg,image/png,image/jpg,application/pdf"
+                                    onChange={(e) => setSelectedPodFile(e.target.files[0])}
+                                    className="w-full bg-slate-950 border border-slate-850 rounded px-3 py-2 text-slate-300 text-xs focus:outline-none focus:border-blue-500"
+                                />
+                            </div>
+
+                            <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-900">
+                                <button
+                                    type="button"
+                                    onClick={() => setIsPodUploadOpen(false)}
+                                    className="px-3.5 py-1.5 rounded bg-slate-900 hover:bg-slate-850 text-slate-355"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={uploadPodMutation.isLoading || !selectedPodFile}
+                                    className="px-3.5 py-1.5 rounded bg-blue-600 hover:bg-blue-500 text-white font-medium transition-colors disabled:opacity-50"
+                                >
+                                    Upload Document
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             )}

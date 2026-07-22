@@ -179,12 +179,91 @@ const logout = (req, res) => {
 // @access  Private
 const getMe = async (req, res, next) => {
     try {
-        // req.user is already attached by the protect middleware
-        // Re-fetch from DB to always return fresh data
         const user = await User.findById(req.user._id);
 
         res.status(200).json({
             success: true,
+            data: user,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @route   GET /api/auth/users
+// @access  Private/Admin
+const getUsers = async (req, res, next) => {
+    try {
+        const users = await User.find({}).sort({ createdAt: -1 });
+        res.status(200).json({
+            success: true,
+            data: users,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @route   PUT /api/auth/users/:id/role
+// @access  Private/Admin
+const updateUserRole = async (req, res, next) => {
+    try {
+        const { role } = req.body;
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            res.status(404);
+            throw new Error('User not found');
+        }
+        user.role = role;
+        await user.save();
+        res.status(200).json({
+            success: true,
+            message: 'User role updated successfully',
+            data: user,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @route   PUT /api/auth/users/:id/status
+// @access  Private/Admin
+const toggleUserStatus = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            res.status(404);
+            throw new Error('User not found');
+        }
+        user.isActive = !user.isActive;
+        await user.save();
+        res.status(200).json({
+            success: true,
+            message: `User status updated to ${user.isActive ? 'active' : 'inactive'}`,
+            data: user,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @route   PUT /api/auth/profile
+// @access  Private
+const updateProfile = async (req, res, next) => {
+    try {
+        const { name, phone, email } = req.body;
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            res.status(404);
+            throw new Error('User not found');
+        }
+        if (name) user.name = name;
+        if (phone) user.phone = phone;
+        if (email) user.email = email;
+        await user.save();
+        res.status(200).json({
+            success: true,
+            message: 'Profile updated successfully',
             data: user,
         });
     } catch (error) {
@@ -198,4 +277,8 @@ module.exports = {
     refreshToken,
     logout,
     getMe,
+    getUsers,
+    updateUserRole,
+    toggleUserStatus,
+    updateProfile,
 };

@@ -23,6 +23,8 @@ const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const fs = require('fs');
+const http = require('http');
+const { Server } = require('socket.io');
 require('dotenv').config();
 
 const connectDB = require('./config/db');
@@ -36,10 +38,40 @@ const brokerRoutes = require('./routes/brokerRoutes');
 const vehicleRoutes = require('./routes/vehicleRoutes');
 const driverRoutes = require('./routes/driverRoutes');
 const shipmentRoutes = require('./routes/shipmentRoutes');
+const trackingRoutes = require('./routes/trackingRoutes');
+const reportRoutes = require('./routes/reportRoutes');
+const aiRoutes = require('./routes/aiRoutes');
+
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.set('trust proxy', 1);
+
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST'],
+  },
+});
+
+io.on('connection', (socket) => {
+  socket.on('join_shipment', (shipmentId) => {
+    socket.join(`shipment:${shipmentId}`);
+  });
+
+  socket.on('send_location', (data) => {
+    if (data && data.shipmentId) {
+      io.to(`shipment:${data.shipmentId}`).emit('location_updated', {
+        ...data,
+        timestamp: new Date().toISOString(),
+      });
+    }
+  });
+});
+
+app.set('io', io);
 
 // ─── 1. CORS — MUST BE FIRST ──────────────────────────────────────────────────
 const allowedOrigins = (process.env.CLIENT_URL || process.env.FRONTEND_URL || 'http://localhost:5173')
@@ -127,6 +159,11 @@ app.use('/api/brokers', brokerRoutes);
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/drivers', driverRoutes);
 app.use('/api/shipments', shipmentRoutes);
+app.use('/api/tracking', trackingRoutes);
+app.use('/api/reports', reportRoutes);
+app.use('/api/ai', aiRoutes);
+
+
 
 // ─── 7. ERROR HANDLERS (must be last) ────────────────────────────────────────
 app.use(notFound);
@@ -134,9 +171,10 @@ app.use(errorHandler);
 
 // ─── START SERVER ─────────────────────────────────────────────────────────────
 connectDB().then(() => {
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     console.log(`🚀 LogiTrack AI Server running on http://localhost:${PORT}`);
     console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`🔗 Client URL:  ${process.env.CLIENT_URL || 'http://localhost:5173'}`);
   });
 });
+

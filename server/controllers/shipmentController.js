@@ -6,6 +6,7 @@
  */
 
 const Shipment = require('../models/Shipment');
+const { generateLRPDFStream, generateInvoicePDFStream } = require('../utils/pdfGenerator');
 
 // @desc    Get all shipments
 // @route   GET /api/shipments
@@ -219,3 +220,93 @@ exports.getShipmentTimeline = async (req, res, next) => {
         next(error);
     }
 };
+
+// @desc    Upload Proof of Delivery (POD) document
+// @route   POST /api/shipments/:id/pod
+// @access  Private
+exports.uploadPOD = async (req, res, next) => {
+    try {
+        const shipment = await Shipment.findOne({ _id: req.params.id, isDeleted: false });
+
+        if (!shipment) {
+            res.status(404);
+            throw new Error('Shipment not found');
+        }
+
+        if (!req.file) {
+            res.status(400);
+            throw new Error('Please upload a valid document file (JPG, PNG, PDF)');
+        }
+
+        const relativePath = `/uploads/pod/${req.file.filename}`;
+        shipment.podImageUrl = relativePath;
+
+        if (['delivered', 'in_transit', 'loading', 'booked'].includes(shipment.status)) {
+            shipment.status = 'pod_received';
+            shipment.podReceivedDate = new Date();
+            shipment.statusHistory.push({
+                status: 'pod_received',
+                timestamp: new Date(),
+                updatedBy: req.user.id,
+                notes: `Proof of Delivery (POD) document uploaded: ${req.file.originalname}`,
+            });
+        }
+
+        shipment.updatedBy = req.user.id;
+        await shipment.save();
+
+        res.json({
+            success: true,
+            message: 'POD document uploaded successfully',
+            podImageUrl: relativePath,
+            data: shipment,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc    Generate & Stream Lorry Receipt (LR) PDF
+// @route   GET /api/shipments/:id/pdf/lr
+// @access  Private
+exports.generateLRPDF = async (req, res, next) => {
+    try {
+        const shipment = await Shipment.findOne({ _id: req.params.id, isDeleted: false })
+            .populate('client', 'companyName contactPerson phone email gstNumber pan address');
+
+        if (!shipment) {
+            res.status(404);
+            throw new Error('Shipment not found');
+        }
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `inline; filename="LR-${shipment.lrNumber}.pdf"`);
+
+        generateLRPDFStream(shipment, res);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc    Generate & Stream Tax Invoice PDF
+// @route   GET /api/shipments/:id/pdf/invoice
+// @access  Private
+exports.generateInvoicePDF = async (req, res, next) => {
+    try {
+        const shipment = await Shipment.findOne({ _id: req.params.id, isDeleted: false })
+            .populate('client', 'companyName contactPerson phone email gstNumber pan address');
+
+        if (!shipment) {
+            res.status(404);
+            throw new Error('Shipment not found');
+        }
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `inline; filename="INVOICE-${shipment.lrNumber}.pdf"`);
+
+        generateInvoicePDFStream(shipment, res);
+    } catch (error) {
+        next(error);
+    }
+};
+

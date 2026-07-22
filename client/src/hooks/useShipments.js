@@ -12,6 +12,7 @@ import {
     updateShipment,
     deleteShipment,
     getShipmentTimeline,
+    uploadShipmentPOD,
 } from '../services/shipmentService';
 
 export const useShipments = (params = {}) => {
@@ -73,3 +74,17 @@ export const useDeleteShipment = () => {
         },
     });
 };
+
+export const useUploadShipmentPOD = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: uploadShipmentPOD,
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['shipments'] });
+            queryClient.invalidateQueries({ queryKey: ['shipment', data.data?._id] });
+            queryClient.invalidateQueries({ queryKey: ['shipmentTimeline', data.data?._id] });
+            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+        },
+    });
+};
+

@@ -23,7 +23,17 @@
 const express = require('express');
 const router = express.Router();
 
-const { register, login, refreshToken, logout, getMe } = require('../controllers/authController');
+const {
+    register,
+    login,
+    refreshToken,
+    logout,
+    getMe,
+    getUsers,
+    updateUserRole,
+    toggleUserStatus,
+    updateProfile,
+} = require('../controllers/authController');
 const protect = require('../middleware/protect');
 const authorize = require('../middleware/authorize');
 const { registerValidation, loginValidation } = require('../validation/authValidation');
@@ -47,5 +57,21 @@ router.post('/logout', protect, logout);
 // @route   GET /api/auth/me
 // @access  Private
 router.get('/me', protect, getMe);
+
+// @route   GET /api/auth/users
+// @access  Private/Admin
+router.get('/users', protect, authorize('admin'), getUsers);
+
+// @route   PUT /api/auth/users/:id/role
+// @access  Private/Admin
+router.put('/users/:id/role', protect, authorize('admin'), updateUserRole);
+
+// @route   PUT /api/auth/users/:id/status
+// @access  Private/Admin
+router.put('/users/:id/status', protect, authorize('admin'), toggleUserStatus);
+
+// @route   PUT /api/auth/profile
+// @access  Private
+router.put('/profile', protect, updateProfile);
 
 module.exports = router;
