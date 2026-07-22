@@ -16,8 +16,8 @@ export const fetchKPIs = async () => {
     return data.data;
 };
 
-export const fetchRevenueChart = async () => {
-    const { data } = await api.get('/dashboard/revenue-chart');
+export const fetchRevenueChart = async (range = 'this_month') => {
+    const { data } = await api.get(`/dashboard/revenue-chart?range=${range}`);
     return data.data;
 };
 

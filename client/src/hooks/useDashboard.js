@@ -35,10 +35,10 @@ export const useKPIs = () =>
         staleTime: 30 * 1000,
     });
 
-export const useRevenueChart = () =>
+export const useRevenueChart = (range = 'this_month') =>
     useQuery({
-        queryKey: ['dashboard', 'revenue-chart'],
-        queryFn: fetchRevenueChart,
+        queryKey: ['dashboard', 'revenue-chart', range],
+        queryFn: () => fetchRevenueChart(range),
         staleTime: 5 * 60 * 1000,
     });
 

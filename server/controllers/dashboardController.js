@@ -161,7 +161,29 @@ exports.getKPIs = async (req, res, next) => {
  */
 exports.getRevenueChart = async (req, res, next) => {
     try {
-        const { start, end } = getLastNDays(29); // 30 days including today
+        const range = req.query.range || 'this_month';
+        let start, end;
+        const now = new Date();
+
+        if (range === 'this_month') {
+            start = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+            end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+        } else if (range === 'last_30_days') {
+            const rangeDates = getLastNDays(29);
+            start = rangeDates.start;
+            end = rangeDates.end;
+        } else if (range === 'last_3_months') {
+            const rangeDates = getLastNDays(89);
+            start = rangeDates.start;
+            end = rangeDates.end;
+        } else if (range === 'last_6_months') {
+            const rangeDates = getLastNDays(179);
+            start = rangeDates.start;
+            end = rangeDates.end;
+        } else {
+            start = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+            end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+        }
 
         const data = await Shipment.aggregate([
             {

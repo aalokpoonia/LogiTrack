@@ -6,6 +6,7 @@
  * using React Query for server state.
  */
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { RefreshCw, AlertCircle } from 'lucide-react';
 import useAuth from '../../hooks/useAuth';
@@ -43,10 +44,11 @@ const Skeleton = ({ className }) => (
 
 const Dashboard = () => {
     const { user } = useAuth();
+    const [chartRange, setChartRange] = useState('this_month');
 
     // Fetch queries
     const kpisQuery = useKPIs();
-    const revenueQuery = useRevenueChart();
+    const revenueQuery = useRevenueChart(chartRange);
     const monthlyQuery = useMonthlyRevenue();
     const statusQuery = useStatusBreakdown();
     const recentQuery = useRecentShipments();
@@ -187,7 +189,7 @@ const Dashboard = () => {
             {/* Main Charts section (Revenue & Profit Trend and Status breakdown) */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2">
-                    <RevenueChart data={revenueQuery.data || []} />
+                    <RevenueChart data={revenueQuery.data || []} range={chartRange} setRange={setChartRange} />
                 </div>
                 <div>
                     <ShipmentStatusChart data={statusQuery.data || []} />
