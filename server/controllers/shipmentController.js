@@ -7,6 +7,59 @@
 
 const Shipment = require('../models/Shipment');
 const { generateLRPDFStream, generateInvoicePDFStream } = require('../utils/pdfGenerator');
+const https = require('https');
+
+const CITY_COORDINATES = {
+    'raipur': [81.6296, 21.2514],
+    'bilaspur': [82.1409, 22.0797],
+    'bhilai': [81.3509, 21.1938],
+    'durg': [81.2849, 21.1904],
+    'korba': [82.7501, 22.3595],
+    'raigarh': [83.3950, 21.8974],
+    'nagpur': [79.0882, 21.1458],
+    'delhi': [77.2090, 28.6139],
+    'mumbai': [72.8777, 19.0760],
+    'kolkata': [88.3639, 22.5726],
+};
+
+const getRecommendedRouteDetails = (originCity, destCity) => {
+    return new Promise((resolve) => {
+        if (!originCity || !destCity) return resolve(null);
+        
+        const origin = originCity.trim().toLowerCase();
+        const dest = destCity.trim().toLowerCase();
+        
+        const originCoords = CITY_COORDINATES[origin];
+        const destCoords = CITY_COORDINATES[dest];
+        
+        if (!originCoords || !destCoords) return resolve(null);
+        
+        const url = `https://router.project-osrm.org/route/v1/driving/${originCoords[0]},${originCoords[1]};${destCoords[0]},${destCoords[1]}?overview=false`;
+        
+        https.get(url, (res) => {
+            let data = '';
+            res.on('data', (chunk) => data += chunk);
+            res.on('end', () => {
+                try {
+                    const json = JSON.parse(data);
+                    if (json && json.routes && json.routes.length > 0) {
+                        const route = json.routes[0];
+                        resolve({
+                            distanceKm: Math.round(route.distance / 1000), // meters to km
+                            durationMinutes: Math.round(route.duration / 60) // seconds to minutes
+                        });
+                    } else {
+                        resolve(null);
+                    }
+                } catch (e) {
+                    resolve(null);
+                }
+            });
+        }).on('error', () => {
+            resolve(null);
+        });
+    });
+};
 
 // @desc    Get all shipments
 // @route   GET /api/shipments
@@ -109,6 +162,14 @@ exports.createShipment = async (req, res, next) => {
             createdBy: req.user.id,
         };
 
+        if (req.body.origin?.city && req.body.destination?.city) {
+            const routeDetails = await getRecommendedRouteDetails(req.body.origin.city, req.body.destination.city);
+            if (routeDetails) {
+                shipmentData.recommendedDistance = routeDetails.distanceKm;
+                shipmentData.recommendedDurationMinutes = routeDetails.durationMinutes;
+            }
+        }
+
         // Note: pre-validate in schema will auto-generate lrNumber if not provided.
         // pre-save will calculate profit and totalAmount based on freightCharge, additionalCharges, gstAmount, truckOwnerPayment.
         const shipment = await Shipment.create(shipmentData);
@@ -152,6 +213,17 @@ exports.updateShipment = async (req, res, next) => {
                 shipment.invoiceDate = new Date();
             } else if (newStatus === 'paid') {
                 shipment.paymentDate = new Date();
+            }
+        }
+
+        // Fetch recommended route if origin/destination is changing
+        const originCity = req.body.origin?.city || shipment.origin?.city;
+        const destCity = req.body.destination?.city || shipment.destination?.city;
+        if (originCity && destCity && (req.body.origin?.city || req.body.destination?.city)) {
+            const routeDetails = await getRecommendedRouteDetails(originCity, destCity);
+            if (routeDetails) {
+                shipment.recommendedDistance = routeDetails.distanceKm;
+                shipment.recommendedDurationMinutes = routeDetails.durationMinutes;
             }
         }
 

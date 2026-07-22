@@ -93,6 +93,14 @@ const shipmentSchema = new mongoose.Schema(
             type: Number, // in km
             min: 0,
         },
+        recommendedDistance: {
+            type: Number,
+            min: 0,
+        },
+        recommendedDurationMinutes: {
+            type: Number,
+            min: 0,
+        },
 
         // ── GOODS ─────────────────────────────────────────────────────────────────
         goodsDescription: {

@@ -19,14 +19,14 @@
  * on navigation. This is more efficient than rendering layout inside each page.
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     LayoutDashboard, Users, Truck, UserCheck, Package,
     Receipt, BarChart3, FileText, Bell, Settings,
     LogOut, Menu, X, MapPin, Bot, ChevronRight,
-    Building2, Zap
+    Building2, Zap, Sun, Moon
 } from 'lucide-react';
 import useAuth from '../hooks/useAuth';
 import { ROUTES } from '../constants/routes';
@@ -90,8 +90,17 @@ const ROLE_COLORS = {
 
 const DashboardLayout = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [theme, setTheme] = useState('dark');
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (theme === 'light') {
+            document.documentElement.classList.add('light');
+        } else {
+            document.documentElement.classList.remove('light');
+        }
+    }, [theme]);
 
     const handleLogout = async () => {
         await logout();
@@ -214,12 +223,11 @@ const DashboardLayout = () => {
     );
 
     return (
-        <div className="flex h-screen overflow-hidden" style={{ background: '#0A0F1E' }}>
+        <div className="flex h-screen overflow-hidden bg-slate-950">
 
             {/* ── DESKTOP SIDEBAR ───────────────────────────────────── */}
             <aside
                 className="hidden lg:flex w-60 flex-shrink-0 flex-col sidebar"
-                style={{ background: '#0D1424' }}
             >
                 <SidebarContent />
             </aside>
@@ -237,8 +245,7 @@ const DashboardLayout = () => {
                             onClick={() => setIsSidebarOpen(false)}
                         />
                         <motion.aside
-                            className="fixed inset-y-0 left-0 z-50 w-60 flex flex-col lg:hidden"
-                            style={{ background: '#0D1424' }}
+                            className="fixed inset-y-0 left-0 z-50 w-60 flex flex-col lg:hidden sidebar"
                             initial={{ x: -240 }}
                             animate={{ x: 0 }}
                             exit={{ x: -240 }}
@@ -255,8 +262,7 @@ const DashboardLayout = () => {
 
                 {/* Top Header */}
                 <header
-                    className="flex-shrink-0 flex items-center justify-between px-4 lg:px-6 h-14 border-b"
-                    style={{ background: '#0D1424', borderColor: 'rgba(255,255,255,0.06)' }}
+                    className="flex-shrink-0 flex items-center justify-between px-4 lg:px-6 h-14 border-b bg-slate-900 border-slate-800"
                 >
                     {/* Mobile hamburger */}
                     <button
@@ -278,6 +284,16 @@ const DashboardLayout = () => {
                         </div>
 
                         <div className="h-4 w-px bg-slate-700" />
+
+                        {/* Theme Toggle Button */}
+                        <button
+                            onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
+                            className="p-2 rounded-lg text-slate-400 hover:text-white transition-colors"
+                            style={{ background: 'rgba(255,255,255,0.04)' }}
+                            title="Toggle Light/Dark Theme"
+                        >
+                            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-purple-400" />}
+                        </button>
 
                         {/* Notification bell */}
                         <button className="relative p-2 rounded-lg text-slate-400 hover:text-white transition-colors"

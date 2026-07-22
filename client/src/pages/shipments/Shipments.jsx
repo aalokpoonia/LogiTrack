@@ -447,8 +447,13 @@ const Shipments = () => {
                                                 <ArrowRight className="w-3 h-3 text-slate-500" />
                                                 <span className="font-semibold text-white">{s.destination?.city}</span>
                                             </div>
-                                            <div className="text-[10px] text-slate-500 mt-0.5">
-                                                {s.distance ? `${s.distance} km` : 'N/A Distance'}
+                                            <div className="text-[10px] text-slate-500 mt-0.5 space-y-0.5">
+                                                <div>Entered: {s.distance ? `${s.distance} km` : 'N/A'}</div>
+                                                {s.recommendedDistance && (
+                                                    <div className="text-blue-400 font-medium">
+                                                        Recommended: {s.recommendedDistance} km ({Math.round(s.recommendedDurationMinutes / 6) / 10} hrs)
+                                                    </div>
+                                                )}
                                             </div>
                                         </td>
                                         <td className="text-slate-350 text-xs">
@@ -753,6 +758,11 @@ const Shipments = () => {
                                         {...register('distance', { valueAsNumber: true })}
                                         className="w-full bg-slate-950 border border-slate-850 rounded px-3 py-2 text-white focus:outline-none focus:border-blue-500"
                                     />
+                                    {selectedShipment?.recommendedDistance && (
+                                        <p className="text-[10px] text-blue-400 mt-1 font-medium">
+                                            OSRM Recommended: {selectedShipment.recommendedDistance} km ({Math.round(selectedShipment.recommendedDurationMinutes / 6) / 10} hrs)
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="md:col-span-2">
